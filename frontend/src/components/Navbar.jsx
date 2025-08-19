@@ -1,7 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const Navbar = () => {
+
+  const [isLoggedin,setIsloggedin] = useState(false) 
+
+  useEffect(() => {
+    const storeData = localStorage.getItem('loggedIn')
+    if(storeData === 'true'){
+      setIsloggedin(true)
+    }else{
+      setIsloggedin(false)
+    }
+    
+  }, [])
+  
+  const handleClick = async (req,res) => {
+    const response = await fetch('http://localhost:3000/logout',{
+      method:'POST',
+      credentials:'include'
+    })
+
+    if(response.ok){
+      localStorage.removeItem('loggedIn')
+      setIsloggedin(false)
+      console.log('logout successfully')
+    }
+  }
+
   return (
     <div className='flex justify-between px-40 py-10'>
       <div>
@@ -23,6 +49,9 @@ const Navbar = () => {
           <li>
             <NavLink to="/contact-us">Contact Us</NavLink>
           </li>
+          { !isLoggedin ?
+          (
+          <>
           <li>
             <NavLink 
               to="/sign-up" 
@@ -39,6 +68,17 @@ const Navbar = () => {
               Login
             </NavLink>
           </li>
+          </>
+          ) : ( <li>
+            <button 
+              onClick={handleClick} 
+              className='px-5 py-3 bg-cyan-300 rounded-2xl'
+            >
+              Logout
+            </button>
+          </li>
+          )
+          }
         </ul>
       </div>
     </div>
