@@ -33,6 +33,7 @@ const Signup = () => {
         if(response.ok){
             console.log("frontend",data)
             localStorage.setItem('loggedIn',true)
+            navigate('/')
         }
     };
 

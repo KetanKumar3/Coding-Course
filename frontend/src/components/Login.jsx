@@ -17,9 +17,24 @@ const Login = () => {
         setUser(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit =async (e) => {
         e.preventDefault();
-        console.log(user);
+        const response = await fetch('http://localhost:3000/login',{
+            method:"POST",
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(user),
+            credentials:'include'
+        })
+        
+        const data = await response.json()
+
+        if(response.ok){
+            console.log("frontend",data)
+            localStorage.setItem('loggedIn',true)
+            navigate('/')
+        }
     };
 
     const handleClose = () => {
